@@ -135,6 +135,17 @@ const Registration = () => {
           </Button>
         </div>
       </div>
+      <div className="flex justify-center gap-1 items-center text-sm font-medium">
+        Already have a account{" "}
+        <span
+          onClick={() => {
+            router.push("/login");
+          }}
+          className="text-[#2D98A6] cursor-pointer"
+        >
+          Login
+        </span>
+      </div>
     </div>
   );
 };

@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadIcon } from "lucide-react";
 
-interface AddArticleModalProps {
+interface AddBlogCategoryModalProps {
   open: boolean;
   onClose: () => void;
   articleData: any;
@@ -22,10 +22,11 @@ interface AddArticleModalProps {
   isEditMode: boolean; // Accept isEditMode prop
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
+  type?: string;
   loading?: any;
 }
 
-export function AddArticleModal({
+export function AddBlogCategoryModal({
   open,
   onClose,
   articleData,
@@ -34,8 +35,9 @@ export function AddArticleModal({
   isEditMode,
   setIsEditMode,
   title,
+  type,
   loading,
-}: AddArticleModalProps) {
+}: AddBlogCategoryModalProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -74,31 +76,32 @@ export function AddArticleModal({
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
-          {/* Upload Image */}
-          <div className="flex justify-center">
-            <label className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer relative overflow-hidden">
-              {articleData.image ? (
-                <img
-                  src={
-                    typeof articleData.image === "string"
-                      ? articleData.image
-                      : URL.createObjectURL(articleData.image)
-                  }
-                  alt="Uploaded"
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <UploadIcon className="w-8 h-8 text-gray-400" />
-              )}
+          {type === "page" && (
+            <div className="flex justify-center">
+              <label className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer relative overflow-hidden">
+                {articleData.image ? (
+                  <img
+                    src={
+                      typeof articleData.image === "string"
+                        ? articleData.image
+                        : URL.createObjectURL(articleData.image)
+                    }
+                    alt="Uploaded"
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  <UploadIcon className="w-8 h-8 text-gray-400" />
+                )}
 
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
-            </label>
-          </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </label>
+            </div>
+          )}
 
           {/* Title */}
           <div className="flex flex-col gap-1">

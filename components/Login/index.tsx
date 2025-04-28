@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 
 const Login = () => {
   const router = useRouter();
@@ -12,15 +12,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Check if there's a token, and if yes, redirect to dashboard
-    const accessToken = Cookies.get('accessToken');
-    if (accessToken) {
-      router.push('/dashboard');
-    }
-  }, [router]);
-
 
   const handleLogin = async () => {
     setLoading(true);
@@ -45,10 +36,9 @@ const Login = () => {
       }
 
       if (data.accessToken) {
-        // Set the accessToken in cookies
-        Cookies.set("accessToken", data.accessToken, { expires: 1 }); // Expires in 1 day
+        Cookies.set("accessToken", data.accessToken, { expires: 1 }); 
+        Cookies.set("user", JSON.stringify(data.data), { expires: 1 }); 
 
-        // Redirect to dashboard after successful login
         router.push("/dashboard");
       } else {
         throw new Error("Access token not found");
@@ -112,6 +102,17 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </Button>
         </div>
+      </div>
+      <div className="flex justify-center gap-1 items-center text-sm font-medium">
+        Don't have a account{" "}
+        <span
+          onClick={() => {
+            router.push("/registration");
+          }}
+          className="text-[#2D98A6] cursor-pointer"
+        >
+          Sign Up
+        </span>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { ChevronLeftIcon, ChevronRight, Delete, PlusIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRight, Delete, DeleteIcon, PlusIcon, Trash2 } from "lucide-react";
 import { CustomTable } from "../Common/CustomTable";
 import { AddArticleModal } from "../Common/AddArticle";
 import { apiRequest } from "@/utils/apiRequest";
@@ -14,6 +14,17 @@ const Article = () => {
     desc: "",
     image: null as File | null,
   });
+
+  const [loading, setLoading] = useState(false);
+
+
+  const headers = [
+    { label: "Image", key: "image" },
+    { label: "Title", key: "title" },
+    { label: "Description", key: "description" },
+ 
+  ];
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
   const [articles, setArticles] = useState<any[]>([]);
@@ -24,6 +35,7 @@ const Article = () => {
 
   const handleSave = async () => {
     try {
+      setLoading(true)
       const formData = new FormData();
       if (articleData.title && articleData.desc) {
         formData.append("title", articleData.title);
@@ -64,6 +76,9 @@ const Article = () => {
     } catch (error) {
       console.error(error);
     }
+    finally {
+      setLoading(false); 
+    }
   };
 
   const fetchArticles = async (page: number) => {
@@ -78,7 +93,7 @@ const Article = () => {
               id: article?._id,
               image: article.image,
               title: article.title,
-              desc: article.description,
+              description: article.description,
             }))
           : [];
 
@@ -100,8 +115,8 @@ const Article = () => {
     setSelectedArticle(article);
     setArticleData({
       title: article.title,
-      desc: article.desc,
-      image: null,
+      desc: article.description,
+      image: article?.image,
     });
     setIsEditMode(true);
     setOpenModal(true);
@@ -109,6 +124,7 @@ const Article = () => {
 
   const handleDeleteArticle = async (id: any) => {
     try {
+      setLoading(true)
       const response = await apiRequest(
         `/api/v1/admin/Article/deleteArticle/${id}`,
         "DELETE"
@@ -120,6 +136,8 @@ const Article = () => {
       }
     } catch (error) {
       console.log(error);
+    }finally {
+      setLoading(false); 
     }
   };
   const startIndex = (currentPage - 1) * 10 + 1;
@@ -127,7 +145,7 @@ const Article = () => {
   return (
     <div>
       <div className="flex flex-row justify-between items-center">
-        <div className="text-[32px] font-bold text-[#202224]">Articles</div>
+        <div className="text-[28px] font-semibold text-[#202224]">Articles</div>
 
         <div className="flex gap-2 ">
           <div>
@@ -143,7 +161,7 @@ const Article = () => {
           <div>
             <Button
               variant={"outline"}
-              icon={<img src="./svg/delete.svg" alt="Delete" />}
+               icon={<Trash2 color="red" />} 
             ></Button>
           </div>
         </div>
@@ -151,6 +169,7 @@ const Article = () => {
 
       <div className="p-4">
         <CustomTable
+        headers={headers}
           onEdit={handleEdit}
           data={articles}
           handleDeleteArticle={handleDeleteArticle}
@@ -186,11 +205,13 @@ const Article = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         articleData={articleData}
-        title={isEditMode ? "Update Articel" : "Add Article"}
+        title={isEditMode ? "Update Article" : "Add Article"}
         setArticleData={setArticleData}
         onSave={handleSave}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
+        loading={loading}
+        
       />
     </div>
   );

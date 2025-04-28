@@ -2,8 +2,9 @@
 
 import { Search } from "lucide-react";
 import { Input } from "../ui/input";
-
+import Cookies from "js-cookie";
 export function Header() {
+  const user = JSON.parse(Cookies.get("user") || "{}");
   return (
     <header className="h-[110px] bg-white dark:bg-gray-800 shadow flex items-center px-6">
       <div className="flex flex-row justify-around w-full">
@@ -24,8 +25,12 @@ export function Header() {
             </div>
 
             <div className="flex flex-col ">
-              <span className="text-base font-bold text-[#404040]">Kalyani Kumari</span>
-              <span className="text-sm font-semibold text-[#565656]">Owner</span>
+              <span className="text-base font-bold text-[#404040]">
+                {user?.fullName || "User"}
+              </span>
+              <span className="text-sm font-semibold text-[#565656]">
+                {user?.userType || "User"}
+              </span>
             </div>
           </div>
         </div>

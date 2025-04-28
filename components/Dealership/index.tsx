@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2 } from "lucide-react";
 import { CustomTable } from "../Common/CustomTable";
 import { apiRequest } from "@/utils/apiRequest";
 import { AddArticleModal } from "../Common/AddArticle";
@@ -14,19 +14,29 @@ const Dealership = () => {
     desc: "",
     image: null as File | null,
   });
+
+  const headers = [
+    { label: "Image", key: "image" },
+    { label: "Title", key: "title" },
+    { label: "Description", key: "description" },
+  ];
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
 
   const fetchDelearship = useCallback(async () => {
     try {
-      const data = await apiRequest(`/api/v1/admin/AutoDealerShip/allAutoDealerShip`, "GET");
+      const data = await apiRequest(
+        `/api/v1/admin/AutoDealerShip/allAutoDealerShip`,
+        "GET"
+      );
       if (data?.status === 200) {
         const articlesArray = data?.data?.[0]?.everyThing || [];
         const formattedData = articlesArray.map((article: any) => ({
           id: article?._id,
           image: article.image,
           title: article.name,
-          desc: article.description,
+          description: article.description,
         }));
         setDelearship(formattedData);
       }
@@ -85,27 +95,30 @@ const Dealership = () => {
     setSelectedArticle(data);
     setDelearshipData({
       title: data.title,
-      desc: data.desc,
+      desc: data.description,
       image: data.image,
     });
     setIsEditMode(true);
     setOpenModal(true);
   }, []);
 
-  const handleDeleteDelearship = useCallback(async (id: any) => {
-    try {
-      const response = await apiRequest(
-        `/api/v1/admin/AutoDealerShip/deleteAutoDealerShip`,
-        "DELETE",
-        { id }
-      );
-      if (response) {
-        fetchDelearship();
+  const handleDeleteDelearship = useCallback(
+    async (id: any) => {
+      try {
+        const response = await apiRequest(
+          `/api/v1/admin/AutoDealerShip/deleteAutoDealerShip`,
+          "DELETE",
+          { id }
+        );
+        if (response) {
+          fetchDelearship();
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [fetchDelearship]);
+    },
+    [fetchDelearship]
+  );
 
   return (
     <div>
@@ -125,13 +138,14 @@ const Dealership = () => {
 
           <Button
             variant="outline"
-            icon={<img src="./svg/delete.svg" alt="Delete" />}
+            icon={<Trash2 color="red" />} 
           />
         </div>
       </div>
 
       <div className="p-4">
         <CustomTable
+          headers={headers}
           onEdit={handleEdit}
           data={delearship}
           handleDeleteArticle={handleDeleteDelearship}

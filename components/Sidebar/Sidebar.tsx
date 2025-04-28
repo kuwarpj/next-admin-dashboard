@@ -47,6 +47,11 @@ export function Sidebar() {
       label: "Blog",
       icon: <FileSpreadsheet className="h-6 w-6" />,
       href: "/dashboard/blog",
+      submenu: [
+        { label: "Blog Category", href: "/dashboard/blog/category" },
+        { label: "Blog Page", href: "/dashboard/blog/blogpage" },
+        { label: "Blog", href: "/dashboard/blog" },
+      ],
     },
     {
       label: "Career",

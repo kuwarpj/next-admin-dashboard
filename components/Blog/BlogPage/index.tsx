@@ -4,12 +4,11 @@ import { PlusIcon, Trash2 } from "lucide-react";
 import { apiRequest } from "@/utils/apiRequest";
 import { Button } from "@/components/ui/button";
 import { CustomTable } from "@/components/Common/CustomTable";
-import { AddBlogCategoryModal } from "./Category/AddBlogCategory";
+import { AddBlogCategoryModal } from "../Category/AddBlogCategory";
 
-const Blog = () => {
+const BlogPage = () => {
   const headers = [
     { label: "Image", key: "image" },
-    { label: "Id", key: "id" },
     { label: "Title", key: "title" },
     { label: "Description", key: "description" },
   ];
@@ -18,7 +17,7 @@ const Blog = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+
   const [blogCategoryData, setBlogCategoryData] = useState({
     title: "",
     desc: "",
@@ -27,28 +26,25 @@ const Blog = () => {
 
   const fetchBlog = useCallback(async () => {
     try {
-      setLoading(true);
-      const data = await apiRequest(`/api/v1/admin/allBlogForAdmin`, "GET");
+      const data = await apiRequest(`/api/v1/admin/allBlogPage`, "GET");
       if (data?.status === 200) {
-        const articlesArray = data?.data?.docs || [];
+        const articlesArray = data?.data;
 
-        const formattedData = articlesArray.map((article: any) => ({
-          id: article?._id,
-          image: article.image,
-          title: article.title,
-          description: article.description,
-        }));
+        const formattedData = [
+          {
+            id: articlesArray?._id,
+            image: articlesArray?.image,
+            title: articlesArray?.title,
+            description: articlesArray?.description,
+          },
+        ];
 
         setBlog(formattedData);
       }
     } catch (error) {
       console.error("Error fetching articles:", error);
-    } finally {
-      setLoading(false); // Reset loading when the request is done
     }
   }, []);
-
-  console.log("This is blog", blog);
 
   useEffect(() => {
     fetchBlog();
@@ -59,8 +55,7 @@ const Blog = () => {
         console.log("Missing data:", blogCategoryData);
         return;
       }
-      setLoading(true);
-      // Create FormData to send data and image
+
       const formData = new FormData();
       formData.append("title", blogCategoryData.title);
       formData.append("description", blogCategoryData.desc);
@@ -76,9 +71,9 @@ const Blog = () => {
 
       if (isEditMode && selectedArticle?.id) {
         response = await apiRequest(
-          `/api/v1/admin/updateBlog/${selectedArticle.id}`,
+          `/api/v1/admin/BlogCategory/updateBlogCategory/${selectedArticle.id}`,
           "PUT",
-          formData 
+          formData
         );
       } else {
         response = await apiRequest(
@@ -98,38 +93,22 @@ const Blog = () => {
       fetchBlog();
     } catch (error) {
       console.error("Error saving blog:", error);
-    } finally {
-      setLoading(false);
     }
   }, [blogCategoryData, isEditMode, selectedArticle, fetchBlog]);
 
-  const handleEdit = useCallback((data: any) => {
-    setSelectedArticle(data);
-    console.log("This is edit data", data);
-    setBlogCategoryData({
-      title: data.title,
-      desc: data.description,
-      image: null,
-    });
-    setIsEditMode(true);
-    setOpenModal(true);
-  }, []);
-
-  const deleteBlog = useCallback(
+  const deleteBlogPage = useCallback(
     async (id: any) => {
       try {
-        setLoading(true);
         const response = await apiRequest(
-          `/api/v1/admin/deleteBlog/${id}`,
-          "DELETE"
+          `/api/v1/admin/deleteBlogPage`,
+          "DELETE",
+          { id }
         );
         if (response) {
           fetchBlog();
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        setLoading(false);
       }
     },
     [fetchBlog]
@@ -138,7 +117,9 @@ const Blog = () => {
   return (
     <div>
       <div className="flex flex-row justify-between items-center">
-        <div className="text-[28px] font-semibold text-[#202224]">Blog</div>
+        <div className="text-[28px] font-semibold text-[#202224]">
+          Blog Page
+        </div>
 
         <div className="flex gap-2 ">
           <div>
@@ -162,11 +143,10 @@ const Blog = () => {
 
       <div className="p-4">
         <CustomTable
-          handleDeleteArticle={deleteBlog}
+          handleDeleteArticle={deleteBlogPage}
           headers={headers}
-          onEdit={handleEdit}
           data={blog}
-          
+          type={"blog_page"}
         />
       </div>
 
@@ -174,16 +154,15 @@ const Blog = () => {
         open={openModal}
         onClose={() => setOpenModal(false)}
         articleData={blogCategoryData}
-        title={isEditMode ? "Update Blog " : "Add Blog "}
+        title={isEditMode ? "Update Blog Page" : "Add Blog page"}
         setArticleData={setBlogCategoryData}
         onSave={handleSave}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
         type="page"
-        loading={loading}
       />
     </div>
   );
 };
 
-export default Blog;
+export default BlogPage;
