@@ -11,7 +11,6 @@ import {
   LayoutDashboard,
   Newspaper,
   RefreshCcw,
-  Settings,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -153,13 +152,5 @@ export function Sidebar() {
         ))}
       </nav>
     </aside>
-  );
-}
-
-function SidebarItem({ label, href }: { label: string; href: string }) {
-  return (
-    <Button asChild variant="ghost" className="justify-start">
-      <a href={href}>{label}</a>
-    </Button>
   );
 }

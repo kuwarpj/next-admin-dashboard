@@ -16,7 +16,6 @@ const BlogPage = () => {
   const [blog, setBlog] = useState<any[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedArticle, setSelectedArticle] = useState<any>(null);
 
   const [blogCategoryData, setBlogCategoryData] = useState({
     title: "",
@@ -67,34 +66,26 @@ const BlogPage = () => {
         formData.append("image", blogCategoryData.image);
       }
 
-      let response;
+      const response = await apiRequest(
+        "/api/v1/admin/createBlogPage",
+        "POST",
+        formData
+      );
 
-      if (isEditMode && selectedArticle?.id) {
-        response = await apiRequest(
-          `/api/v1/admin/BlogCategory/updateBlogCategory/${selectedArticle.id}`,
-          "PUT",
-          formData
-        );
-      } else {
-        response = await apiRequest(
-          "/api/v1/admin/createBlogPage",
-          "POST",
-          formData 
-        );
+      if (response) {
+        setBlogCategoryData({
+          title: "",
+          desc: "",
+          image: null,
+        });
+        setIsEditMode(false);
+        setOpenModal(false);
+        fetchBlog();
       }
-
-      setBlogCategoryData({
-        title: "",
-        desc: "",
-        image: null,
-      });
-      setIsEditMode(false);
-      setOpenModal(false);
-      fetchBlog();
     } catch (error) {
       console.error("Error saving blog:", error);
     }
-  }, [blogCategoryData, isEditMode, selectedArticle, fetchBlog]);
+  }, [blogCategoryData, isEditMode, fetchBlog]);
 
   const deleteBlogPage = useCallback(
     async (id: any) => {
@@ -133,10 +124,7 @@ const BlogPage = () => {
           </div>
 
           <div>
-            <Button
-              variant={"outline"}
-              icon={<Trash2 color="red" />} 
-            />
+            <Button variant={"outline"} icon={<Trash2 color="red" />} />
           </div>
         </div>
       </div>

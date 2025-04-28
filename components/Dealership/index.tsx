@@ -78,14 +78,16 @@ const Dealership = () => {
         );
       }
 
-      setDelearshipData({
-        title: "",
-        desc: "",
-        image: null,
-      });
-      setIsEditMode(false);
-      setOpenModal(false);
-      fetchDelearship();
+      if (response) {
+        setDelearshipData({
+          title: "",
+          desc: "",
+          image: null,
+        });
+        setIsEditMode(false);
+        setOpenModal(false);
+        fetchDelearship();
+      }
     } catch (error) {
       console.error(error);
     }
@@ -136,10 +138,7 @@ const Dealership = () => {
             Add Auto dealership
           </Button>
 
-          <Button
-            variant="outline"
-            icon={<Trash2 color="red" />} 
-          />
+          <Button variant="outline" icon={<Trash2 color="red" />} />
         </div>
       </div>
 

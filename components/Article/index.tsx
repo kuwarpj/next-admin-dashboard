@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { ChevronLeftIcon, ChevronRight, Delete, DeleteIcon, PlusIcon, Trash2 } from "lucide-react";
+import { ChevronLeftIcon, ChevronRight, PlusIcon, Trash2 } from "lucide-react";
 import { CustomTable } from "../Common/CustomTable";
 import { AddArticleModal } from "../Common/AddArticle";
 import { apiRequest } from "@/utils/apiRequest";

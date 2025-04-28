@@ -55,7 +55,7 @@ const BlogCategory = () => {
         console.log("Missing data:", blogCategoryData);
         return;
       }
-     setLoading(true)
+      setLoading(true);
       const payload = {
         title: blogCategoryData.title,
         description: blogCategoryData.desc,
@@ -63,14 +63,12 @@ const BlogCategory = () => {
       let response;
 
       if (isEditMode && selectedArticle?.id) {
-       
         response = await apiRequest(
           `/api/v1/admin/BlogCategory/updateBlogCategory/${selectedArticle.id}`,
           "PUT",
           payload
         );
       } else {
-       
         response = await apiRequest(
           "/api/v1/admin/BlogCategory/addBlogCategory",
           "POST",
@@ -78,18 +76,20 @@ const BlogCategory = () => {
         );
       }
 
-      setBlogCategoryData({
-        title: "",
-        desc: "",
-      });
-      setIsEditMode(false);
-      setOpenModal(false);
-      fetchBlog();
+      if (response) {
+        setBlogCategoryData({
+          title: "",
+          desc: "",
+        });
+        setIsEditMode(false);
+        setOpenModal(false);
+        fetchBlog();
+      }
     } catch (error) {
       console.error(error);
-    }finally {
-        setLoading(false); 
-      }
+    } finally {
+      setLoading(false);
+    }
   }, [blogCategoryData, isEditMode, selectedArticle, fetchBlog]);
 
   const handleEdit = useCallback((data: any) => {
@@ -106,7 +106,7 @@ const BlogCategory = () => {
   const handleBlogCategory = useCallback(
     async (id: any) => {
       try {
-        setLoading(true)
+        setLoading(true);
         const response = await apiRequest(
           `/api/v1/admin/BlogCategory/deleteBlogCategory/${id}`,
           "DELETE"
@@ -116,9 +116,8 @@ const BlogCategory = () => {
         }
       } catch (error) {
         console.log(error);
-      }
-      finally {
-        setLoading(false); 
+      } finally {
+        setLoading(false);
       }
     },
     [fetchBlog]
@@ -145,7 +144,7 @@ const BlogCategory = () => {
             <div>
               <Button
                 variant={"outline"}
-                icon={<Trash2 color="red" />} 
+                icon={<Trash2 color="red" />}
               ></Button>
             </div>
           </div>

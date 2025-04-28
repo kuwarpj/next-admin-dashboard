@@ -78,24 +78,26 @@ const Blog = () => {
         response = await apiRequest(
           `/api/v1/admin/updateBlog/${selectedArticle.id}`,
           "PUT",
-          formData 
+          formData
         );
       } else {
         response = await apiRequest(
           "/api/v1/admin/createBlogPage",
           "POST",
-          formData 
+          formData
         );
       }
 
-      setBlogCategoryData({
-        title: "",
-        desc: "",
-        image: null,
-      });
-      setIsEditMode(false);
-      setOpenModal(false);
-      fetchBlog();
+      if (response) {
+        setBlogCategoryData({
+          title: "",
+          desc: "",
+          image: null,
+        });
+        setIsEditMode(false);
+        setOpenModal(false);
+        fetchBlog();
+      }
     } catch (error) {
       console.error("Error saving blog:", error);
     } finally {
@@ -152,10 +154,7 @@ const Blog = () => {
           </div>
 
           <div>
-            <Button
-              variant={"outline"}
-              icon={<Trash2 color="red" />} 
-            />
+            <Button variant={"outline"} icon={<Trash2 color="red" />} />
           </div>
         </div>
       </div>
@@ -166,7 +165,6 @@ const Blog = () => {
           headers={headers}
           onEdit={handleEdit}
           data={blog}
-          
         />
       </div>
 

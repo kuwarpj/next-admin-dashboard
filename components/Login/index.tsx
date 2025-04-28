@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
@@ -104,7 +104,7 @@ const Login = () => {
         </div>
       </div>
       <div className="flex justify-center gap-1 items-center text-sm font-medium">
-        Don't have a account{" "}
+        Dont have a account{" "}
         <span
           onClick={() => {
             router.push("/registration");
