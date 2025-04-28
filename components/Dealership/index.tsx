@@ -15,6 +15,8 @@ const Dealership = () => {
     image: null as File | null,
   });
 
+  const [loading, setLoading] = useState(false)
+
   const headers = [
     { label: "Image", key: "image" },
     { label: "Title", key: "title" },
@@ -50,7 +52,9 @@ const Dealership = () => {
   }, [fetchDelearship]);
 
   const handleSave = useCallback(async () => {
+    
     try {
+      setLoading(true)
       const formData = new FormData();
       if (delearshipData.title && delearshipData.desc) {
         formData.append("name", delearshipData.title);
@@ -58,6 +62,8 @@ const Dealership = () => {
       } else {
         console.log("Missing data:", delearshipData);
       }
+
+   
 
       if (delearshipData.image && typeof delearshipData.image !== "string") {
         formData.append("image", delearshipData.image);
@@ -90,6 +96,8 @@ const Dealership = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally{
+      setLoading(false)
     }
   }, [delearshipData, isEditMode, selectedArticle, fetchDelearship]);
 
@@ -121,6 +129,9 @@ const Dealership = () => {
     },
     [fetchDelearship]
   );
+
+
+
 
   return (
     <div>
@@ -160,6 +171,7 @@ const Dealership = () => {
         onSave={handleSave}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
+        loading={loading}
       />
     </div>
   );
