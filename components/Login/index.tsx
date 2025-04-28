@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie"; 
 
 const Login = () => {
   const router = useRouter();
@@ -13,12 +13,21 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // Check if there's a token, and if yes, redirect to dashboard
+    const accessToken = Cookies.get('accessToken');
+    if (accessToken) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
+
   const handleLogin = async () => {
     setLoading(true);
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-      const response = await fetch(`${API_URL}/api/v1/admin/login`, {
+      const response = await fetch(`${API_URL}/api/v1/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,11 +44,11 @@ const Login = () => {
         throw new Error(data.message || "Login failed");
       }
 
-      console.log(data);
-
       if (data.accessToken) {
-        localStorage.setItem("accessToken", data.accessToken);
+        // Set the accessToken in cookies
+        Cookies.set("accessToken", data.accessToken, { expires: 1 }); // Expires in 1 day
 
+        // Redirect to dashboard after successful login
         router.push("/dashboard");
       } else {
         throw new Error("Access token not found");
@@ -51,6 +60,7 @@ const Login = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="bg-white px-[32px] py-[23px] w-[500px] rounded-[24px] border border-[#B9B9B9]">
       <div className="flex flex-row gap-2 items-center">

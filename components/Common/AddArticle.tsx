@@ -13,20 +13,15 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadIcon } from "lucide-react";
 
-interface ArticleData {
-  title: string;
-  desc: string;
-  image: File | null;
-}
 interface AddArticleModalProps {
   open: boolean;
   onClose: () => void;
-  articleData: ArticleData;
-  setArticleData: React.Dispatch<React.SetStateAction<ArticleData>>;
+  articleData: any;
+  setArticleData: any;
   onSave: () => void;
   isEditMode: boolean; // Accept isEditMode prop
   setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
-  title : string
+  title: string;
 }
 
 export function AddArticleModal({
@@ -37,12 +32,12 @@ export function AddArticleModal({
   onSave,
   isEditMode,
   setIsEditMode,
-  title
+  title,
 }: AddArticleModalProps) {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setArticleData((prev) => ({
+      setArticleData((prev: any) => ({
         ...prev,
         image: file,
       }));
@@ -53,7 +48,7 @@ export function AddArticleModal({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setArticleData((prev) => ({
+    setArticleData((prev: any) => ({
       ...prev,
       [name]: value,
     }));
@@ -82,13 +77,18 @@ export function AddArticleModal({
             <label className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer relative overflow-hidden">
               {articleData.image ? (
                 <img
-                  src={URL.createObjectURL(articleData.image)}
+                  src={
+                    typeof articleData.image === "string"
+                      ? articleData.image
+                      : URL.createObjectURL(articleData.image)
+                  }
                   alt="Uploaded"
                   className="object-cover w-full h-full"
                 />
               ) : (
                 <UploadIcon className="w-8 h-8 text-gray-400" />
               )}
+
               <input
                 type="file"
                 accept="image/*"

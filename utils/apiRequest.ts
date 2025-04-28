@@ -26,7 +26,7 @@ export const apiRequest = async (
           ...requestOptions.headers,
           "Content-Type": "application/json",
         };
-        // requestOptions.body = JSON.stringify(data);
+        requestOptions.body = JSON.stringify(data);
       }
   
       const response = await fetch(`${API_URL}${endpoint}`, requestOptions);

@@ -31,11 +31,11 @@ const Article = () => {
       } else {
         console.log("Missing data:", articleData);
       }
-
-      if (articleData.image) {
+      if (articleData.image && articleData.image instanceof File) {
         formData.append("image", articleData.image);
+      } else {
+        console.log("No image selected");
       }
-
       let response;
       if (isEditMode && selectedArticle?.id) {
         response = await apiRequest(

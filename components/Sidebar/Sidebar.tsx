@@ -4,9 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
+  BriefcaseBusiness,
   ChevronDown,
   ChevronRight,
+  FileSpreadsheet,
   LayoutDashboard,
+  Newspaper,
+  RefreshCcw,
   Settings,
   User,
 } from "lucide-react";
@@ -31,22 +35,22 @@ export function Sidebar() {
     },
     {
       label: "Article",
-      icon: <Settings className="h-6 w-6" />,
+      icon: <Newspaper className="h-6 w-6" />,
       href: "/dashboard/article",
     },
     {
       label: "Auto dealership",
-      icon: <User className="h-5 w-5" />,
+      icon: <RefreshCcw className="h-6 w-6" />,
       href: "/dashboard/dealership",
     },
     {
       label: "Blog",
-      icon: <User className="h-5 w-5" />,
-      href: "/users",
+      icon: <FileSpreadsheet className="h-6 w-6" />,
+      href: "/dashboard/blog",
     },
     {
       label: "Career",
-      icon: <User className="h-5 w-5" />,
+      icon: <BriefcaseBusiness className="h-6 w-6" />,
       href: "/users",
     },
     {
@@ -85,10 +89,10 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-gray-100 dark:bg-gray-900 p-4 flex flex-col">
-      <div className="flex justify-center w-full">
+      <div className="flex justify-start w-full">
         <img src={"/image/logo.png"} width={60} height={60} />
       </div>
-      <nav className="flex flex-col gap-2 cursor-pointer">
+      <nav className="flex flex-col gap-2 cursor-pointer pt-[12px]">
         {menuItems.map((item) => (
           <div key={item.label}>
             {item.submenu ? (
@@ -126,13 +130,17 @@ export function Sidebar() {
                 )}
               </div>
             ) : (
-              <Link href={item.href!}>
+              <Link className="" href={item.href!}>
                 <Button
-                  variant={pathname === item.href ? "secondary" : "ghost"}
-                  className="w-full justify-start flex items-center gap-4"
+                  variant={pathname === item.href ? "default" : "ghost"}
+                  className={`w-full justify-start flex items-center gap-4 h-11 ${
+                    pathname === item?.href ? "bg-[#199FB1] text-white" : ""
+                  }`}
                 >
-                  <span>{item.icon}</span>
-                  <span className="font-semibold">{item.label}</span>
+                  <div className="flex items-center gap-4 w-full">
+                    <span>{item.icon}</span>
+                    <span className="font-semibold">{item.label}</span>
+                  </div>
                 </Button>
               </Link>
             )}
